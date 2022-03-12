@@ -20,6 +20,8 @@ void Search1(int rno);
 void delete_account(int n);
 void afterlogin(int rno);
 void modify_account(int rno);
+void Teach();
+void Search_SectionStudent(int n);
 void CheckAssignment(int rno);
 
 struct Details
@@ -164,6 +166,7 @@ rep:
     system("Color 0B");
     int op;
     cout << "1) For Admin" << endl;
+    cout << "2)Teacher" << endl;
     cout << "2)Login As a Student:" << endl;
     cin >> op;
     switch (op)
@@ -172,11 +175,14 @@ rep:
         Admin();
         break;
     case 2:
+        Teach();
+        break;
+    case 3:
         loginStudent();
         system("pause");
         break;
     }
-
+    system("pause");
     goto rep;
 }
 void delete_account(int n)
@@ -468,4 +474,73 @@ void modify_account(int rno)
         cout << "\n\n Record Not Found ";
 
     system("pause");
+}
+
+void Teach()
+{
+    int n;
+    cout << "1)Disply all Student list" << endl;
+    cout << "2)Disply on Section A Student" << endl;
+    cout << "3)Disply on Section B Student" << endl;
+    cin >> n;
+    switch (n)
+    {
+    case 1:
+        display_all();
+        break;
+    case 2:
+        Search_SectionStudent(1);
+        break;
+    case 3:
+        Search_SectionStudent(0);
+        break;
+    }
+}
+void Search_SectionStudent(int n)
+{
+
+    bool flag = false;
+    account ac;
+    ifstream inFile;
+    string section;
+    if (n == 1)
+    {
+        section = "Search Student of Section A";
+    }
+    else
+    {
+        section = "Search Student of Section B";
+    }
+
+    inFile.open("account.dat", ios::binary);
+    if (!inFile)
+    {
+        cout << "File could not be open !! Press any Key...";
+        return;
+    }
+    cout << "\n"
+         << section << " \n\n";
+    cout << "====================================================\n";
+    cout << "Roll.      NAME           Email              PH_No\n";
+    cout << "====================================================\n";
+    while (inFile.read(reinterpret_cast<char *>(&ac), sizeof(account)))
+    {
+        if (n == 1)
+        {
+            if (ac.retRoll() % 2 == 0)
+            {
+
+                ac.report();
+            }
+        }
+        else
+        {
+            if (ac.retRoll() % 2 != 0)
+            {
+
+                ac.report();
+            }
+        }
+    }
+    inFile.close();
 }
