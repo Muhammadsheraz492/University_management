@@ -3,6 +3,8 @@
 #include <cctype>
 #include <iomanip>
 #include <string.h>
+#include <ctime>
+#include <windows.h>
 #include <string>
 using namespace std;
 
@@ -22,6 +24,8 @@ void afterlogin(int rno);
 void modify_account(int rno);
 void Teach();
 void Search_SectionStudent(int n);
+void Time();
+
 void CheckAssignment(int rno);
 
 struct Details
@@ -479,6 +483,7 @@ void modify_account(int rno)
 void Teach()
 {
     int n;
+    Time();
     cout << "1)Disply all Student list" << endl;
     cout << "2)Disply on Section A Student" << endl;
     cout << "3)Disply on Section B Student" << endl;
@@ -544,3 +549,23 @@ void Search_SectionStudent(int n)
     }
     inFile.close();
 }
+void Time(){
+	
+	system("cls");
+	  time_t t = time(NULL);
+    tm *timePtr = localtime(&t); // stores the local time of the computer.
+
+    int seconds = (timePtr->tm_sec);
+    int minutes = (timePtr->tm_min);
+    int hrs = (timePtr->tm_hour);
+if(hrs>12){
+	hrs=hrs-12;
+}
+
+  cout<<"\t\t\t"<<"Today Time is :"<<hrs<<":"<<minutes<<":"<<seconds<<endl;
+cout<<endl<<endl<<endl;
+	
+}
+
+
+
