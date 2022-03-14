@@ -1,4 +1,5 @@
 #include <iostream>
+#include <string>
 using namespace std;
 // Roll Number 38
 struct Student_Record
@@ -23,11 +24,25 @@ struct Teacher_Record
 };
 struct TimeTable
 {
+    int id;
     string Teacher_Name;
     string Subject_Name;
     string Time;
+    string Seaction;
     TimeTable *next;
 };
+
+struct StudentData
+{
+    /* data */
+
+    string name;
+    string email;
+
+    string address;
+    string Ph_no;
+};
+
 class Student
 {
 private:
@@ -37,6 +52,7 @@ private:
     int T_Id;
     TimeTable *start_Time, *Triverse;
     int ToTalTimeTable = 0;
+    int Time_TableId;
 
 public:
     Student()
@@ -46,6 +62,7 @@ public:
         s_T = NULL;
         T_Id = 0;
         start_Time = NULL;
+        Time_TableId = 0;
     }
     //	38 Roll
     void AddStudent();
@@ -61,7 +78,15 @@ public:
     void Search_Teacher();
     void Delet_Teacher();
     void Time_TableMenu();
-    void TimeTableAdd();
+    void TimeTableAdd(string Section);
+    void DisplyTimeTable();
+    void UpdateTimeTable();
+    void Student_Access();
+    void WelCome_Student_Lms(int rno, string name, string phone, string Section, string address);
+    void TeacherAccess();
+    void SectionA();
+    void SectionB();
+    void AccessLms_Teacher(int id, string name, string phone, string email, string address);
 };
 
 int main()
@@ -74,12 +99,13 @@ rep:
     system("cls");
 
     cout << "\t\t\t*************************************************************" << endl;
-    cout << "\t\t\t     	  	      CLASS USED IN PROJECT                     " << endl;
-    cout << "\t\t\t**********************************************************" << endl;
+    cout << "\t\t\t     	   WELCOME TO UNIVERSITY MANAGEMENT                     " << endl;
+    cout << "\t\t\t **********************************************************" << endl;
     string password;
     cout << "1)Admin" << endl;
     cout << "2)Teachar" << endl;
-    cout << "3)Exit" << endl;
+    cout << "3)For Student" << endl;
+    cout << "4)Exit" << endl;
     cout << "Enter You'r Choice :";
     cin >> op;
     switch (op)
@@ -98,12 +124,21 @@ rep:
         }
         break;
     case 2:
-        obj.Disply();
+        // obj.Disply();
         break;
+
     case 3:
+        obj.Student_Access();
+        break;
+
+    case 4:
         cout << "Thanks You Very Much" << endl;
 
         exit(0);
+        break;
+    default:
+        cout << " You entered  Invalid  choice " << endl;
+        system("pause");
     }
 
     goto rep;
@@ -112,11 +147,16 @@ rep:
 void Student::Disply()
 {
     temp = start;
+    if (start == NULL)
+    {
+        cout << "Record Not Found" << endl;
+        return;
+    }
 
     system("cls");
-    cout << "============================================================\n";
-    cout << "Roll.      	 NAME    		       Email              PH_No\n";
-    cout << "=============================================================\n";
+    cout << "=================================================================\n";
+    cout << "Roll.      	 NAME    		       Email                PH_No\n";
+    cout << "==================================================================\n";
 
     while (temp != NULL)
     {
@@ -154,12 +194,16 @@ void Student::Student_Menu()
 
         case 1:
             AddStudent();
+            system("cls");
             break;
         case 2:
             Disply();
+            system("cls");
+
             break;
         case 3:
             Search();
+            system("cls");
             break;
         case 4:
             Delet_Student();
@@ -276,6 +320,7 @@ void Student::Search()
         cout << "Record not Found" << endl;
         system("pause");
     }
+    system("pause");
 }
 
 void Student::Delet_Student()
@@ -401,7 +446,9 @@ void Student::Teacher_Menu()
         cout << "2)Disply All Teacher" << endl;
         cout << "3)Search Teacher" << endl;
         cout << "4)Delete Record" << endl;
-        cout << "5)Exit" << endl;
+        cout << "5)Go to main Menu" << endl;
+        cout << "6)Shutdow System" << endl;
+        cout << "Enter you'r choice:";
         cin >> op;
         switch (op)
         {
@@ -409,16 +456,30 @@ void Student::Teacher_Menu()
         case 1:
             AddTeacher();
             system("pause");
+            Teacher_Menu();
             break;
         case 2:
             Disply_Teacher();
+            Teacher_Menu();
             break;
         case 3:
             Search_Teacher();
+            Teacher_Menu();
             break;
         case 4:
             Delet_Teacher();
+            Teacher_Menu();
             break;
+        case 5:
+
+            break;
+
+        case 6:
+            exit(0);
+            break;
+        default:
+            cout << "You Entered Invalid Value!" << endl;
+            system("pause");
         }
     } while (op != 5);
 }
@@ -499,28 +560,67 @@ void Student::Delet_Teacher()
 
 void Student::Time_TableMenu()
 {
+
     int op;
+    int val;
+    string Section;
     system("cls");
     cout << "1)For Add Time " << endl;
     cout << "2)Disply Time Table" << endl;
     cout << "3)Update TimeTable" << endl;
+    cout << "4)Go to Back Menu" << endl;
+    cout << "Enter your choice:" << endl;
     cin >> op;
     switch (op)
     {
     case 1:
+        cout << "How Many Subkect You want TO added";
+        cin >> val;
+        cout << "Enter Section Name without Space: ";
+        //  getline(cin,Section);
+        cin >> Section;
 
-        TimeTableAdd();
+        //  cin.ignore();
+        for (int i = 0; i < val; i++)
+        {
+            /* code */
+
+            TimeTableAdd(Section);
+        }
+
+        system("pause");
+        Time_TableMenu();
+
+        break;
+
+    case 2:
+        DisplyTimeTable();
+        system("pause");
+        Time_TableMenu();
+        break;
+    case 3:
+        UpdateTimeTable();
+        system("pause");
+        Time_TableMenu();
+        break;
+    case 4:
+        break;
+    default:
+        cout << "You Entered Invaliid Value" << endl;
+
+        system("pause");
+        Time_TableMenu();
         break;
     }
 }
 
-void Student::TimeTableAdd()
+void Student::TimeTableAdd(string Section)
 {
-    if (ToTalTimeTable == 2)
-    {
-        cout << "You Add Two Time Table" << endl;
-        return;
-    }
+    // if (ToTalTimeTable == )
+    // {
+    //     cout << "You Add Two Time Table" << endl;
+    //     return;
+    // }
 
     if (start_Time == NULL)
     {
@@ -532,26 +632,363 @@ void Student::TimeTableAdd()
         getline(cin, start_Time->Subject_Name);
         cout << "Enter Time";
         getline(cin, start_Time->Time);
+        start_Time->Seaction = Section;
         start_Time->next = NULL;
-        Triverse = start_Time;
         ToTalTimeTable++;
+        start_Time->id = ToTalTimeTable;
+        Triverse = start_Time;
         return;
     }
     TimeTable *temp;
     temp = new TimeTable;
-    cin.ignore();
+    // cin.ignore();
     cout << "Enter  Teacher Name ";
     getline(cin, temp->Teacher_Name);
     cout << "Enter   Subject Name ";
     getline(cin, temp->Subject_Name);
     cout << "Enter Time";
     getline(cin, temp->Time);
+    temp->Seaction = Section;
+    ToTalTimeTable++;
+    temp->id = ToTalTimeTable;
     temp->next = NULL;
     Triverse->next = temp;
-    ToTalTimeTable++;
     Triverse = temp;
 }
 
-//*********************
-//                   CLASS USED IN PROJECT
-//**********************
+void Student::DisplyTimeTable()
+{
+
+    TimeTable *temp;
+    temp = start_Time;
+
+    if (temp == NULL)
+    {
+        cout << "You Have No Time Table Please First Add Time Table" << endl;
+        system("pause");
+        Time_TableMenu();
+        return;
+    }
+
+    while (temp != NULL)
+    {
+        /* code */
+
+        cout << temp->id << "  " << temp->Subject_Name << "      " << temp->Teacher_Name << "    " << temp->Time << "   " << temp->Seaction << endl;
+        cout << endl;
+
+        temp = temp->next;
+    }
+}
+
+void Student::UpdateTimeTable()
+{
+
+    TimeTable *temp;
+    temp = start_Time;
+    int id;
+    cout << "Enter Time  Table Id  For Update ";
+    cin >> id;
+
+    while (temp != NULL)
+    {
+        /* co
+        de */
+        if (temp->id == id)
+        {
+        rep:
+            int op;
+            cout << "1)For Update Teacher Name" << endl;
+            cout << "2)For Update Subject Name" << endl;
+            cout << "3)For Update Section Name" << endl;
+            cout << "4)For Update Time" << endl;
+            cout << "5)Update All Things" << endl;
+            cout << "6)For Back Menu" << endl;
+            cout << "Enter You'r Choice" << endl;
+            cin >> op;
+            cin.ignore();
+            switch (op)
+            {
+            case 1:
+                /* code */
+                cout << "Enter Teacher Name";
+                getline(cin, temp->Teacher_Name);
+
+                break;
+            case 2:
+                cout << "Enter Stubject Name";
+                getline(cin, temp->Subject_Name);
+            case 3:
+                cout << "Enter Section";
+                getline(cin, temp->Seaction);
+            case 4:
+                cout << "Enter Time";
+                getline(cin, temp->Time);
+
+                break;
+            case 5:
+                cout << "Enter Teacher Name";
+                getline(cin, temp->Teacher_Name);
+                cout << "Enter Stubject Name";
+                getline(cin, temp->Subject_Name);
+                cout << "Enter Section";
+                getline(cin, temp->Seaction);
+                cout << "Enter Time";
+                getline(cin, temp->Time);
+                break;
+            case 6:
+                Time_TableMenu();
+
+                break;
+            default:
+                cout << "You Enter Invalid choice Please Enter Correct" << endl;
+                system("pause");
+                goto rep;
+
+                break;
+            }
+
+            cout << temp->id << "  " << temp->Subject_Name << "      " << temp->Teacher_Name << "    " << temp->Time << "   " << temp->Seaction << endl;
+            cout << endl;
+        }
+
+        temp = temp->next;
+    }
+}
+void Student::Student_Access()
+{
+    temp = start;
+    StudentData d;
+    int rno;
+    cout << "Enter You'r Roll NUmber" << endl;
+    cin >> rno;
+
+    if (temp == NULL)
+    {
+        cout << "Please Contact Your Admin" << endl;
+        return;
+    }
+    while (temp != NULL)
+    {
+        if (temp->rno == rno)
+        {
+            d.name = temp->name;
+            d.email = temp->email;
+            d.address = d.address;
+            WelCome_Student_Lms(temp->rno, temp->name, temp->Ph_no, temp->email, temp->address);
+        }
+        temp = temp->next;
+    }
+
+    system("pause");
+}
+
+void Student::WelCome_Student_Lms(int rno, string name, string phone, string Section, string address)
+{
+    StudentData D;
+
+    cout << "\t\t\t*************************************************************" << endl;
+    cout << "\t\t\t     	   WELCOME TO UOG LMS " << name << "                     " << endl;
+    cout << "\t\t\t **********************************************************" << endl;
+    cout << endl;
+    cout << endl;
+    int op;
+rep:
+    system("cls");
+    cout << "1)Check Personal Details" << endl;
+    cout << "2)Check Time Table" << endl;
+    // cout << "3)Check Present" << endl;
+    cout << "3)For  main Menu:" << endl;
+    cout << "Enter you'r Choice :";
+    cin >> op;
+
+    switch (op)
+    {
+    case 1:
+        cout << "Roll Number :" << rno << endl;
+        cout << "Name is :" << name << endl;
+        cout << "Phone Number :" << phone << endl;
+        cout << "Email For Addmission :" << Section;
+        cout << "Section :";
+        if (rno % 2 == 0)
+        {
+            cout << "A" << endl;
+        }
+        else
+        {
+            cout << "B" << endl;
+        }
+        system("pause");
+        goto rep;
+        break;
+
+    case 2:
+        DisplyTimeTable();
+        system("pause");
+        goto rep;
+        break;
+    case 3:
+        break;
+
+    default:
+        cout << "You Entered Invalid Value" << endl;
+        system("pause");
+
+        goto rep;
+        break;
+    }
+}
+
+void Student::TeacherAccess()
+{
+
+    temp_T = s_T;
+
+    system("cls");
+    int id;
+    bool flag = false;
+    cout << "ENter Id:";
+    cin >> id;
+
+    if (temp_T == NULL)
+    {
+        cout << "No Record Found   please cntact your Admin" << endl;
+        return;
+    }
+
+    while (temp_T != NULL)
+    {
+        if (temp_T->T_Id == id)
+        {
+
+            AccessLms_Teacher(temp_T->T_Id, temp_T->name, temp_T->Ph_no, temp_T->email, temp_T->address);
+            // cout << temp_T->T_Id << "  " << temp_T->name << "   " << temp_T->email << "   " << temp_T->Ph_no << "   " << temp_T->address << endl;
+        }
+
+        temp_T = temp_T->next;
+    }
+
+    if (!flag)
+    {
+
+        cout << "Record Not Found  !" << endl;
+    }
+    system("pause");
+}
+
+void Student::AccessLms_Teacher(int rno, string name, string phone, string email, string address)
+{
+    int op;
+
+    cout << "\t\t\t*************************************************************" << endl;
+    cout << "\t\t\t     	   WELCOME TO UOG LMS " << name << "                     " << endl;
+    cout << "\t\t\t **********************************************************" << endl;
+
+rep:
+    system("cls");
+    cout << "1)Check Personal Details" << endl;
+    cout << "2)Check Time Table" << endl;
+    // cout << "3)Check Present" << endl;
+    cout << "3)Check Students" << endl;
+    cout << "4)Section A  student" << endl;
+    cout << "5)Section B  student" << endl;
+    cout << "6)For  main Menu:" << endl;
+    cout << "Enter you'r Choice :";
+
+    cin >> op;
+
+    switch (op)
+    {
+    case 1:
+        cout << "Id Number :" << rno << endl;
+        cout << "Name is :" << name << endl;
+        cout << "Phone Number" << phone << endl;
+        cout << "Email For Addmission :" << email;
+        cout << "Address :" << address;
+        system("pause");
+        goto rep;
+
+        break;
+
+    case 2:
+        DisplyTimeTable();
+        system("pause");
+        goto rep;
+        break;
+    case 3:
+        Disply();
+
+        break;
+    case 4:
+        SectionA();
+        system("pause");
+        goto rep;
+        break;
+
+    case 6:
+        SectionB();
+        system("pause");
+        goto rep;
+        break;
+
+    default:
+        cout << "You Entered Invalid Value" << endl;
+        system("pause");
+
+        goto rep;
+        break;
+    }
+}
+
+void Student::SectionA()
+{
+
+    temp = start;
+    if (start == NULL)
+    {
+        cout << "Record Not Found" << endl;
+        return;
+    }
+
+    system("cls");
+    // cout << "=================================================================\n";
+    // cout << "Roll.      	 NAME    		       Email                PH_No\n";
+    // cout << "==================================================================\n";
+
+    while (temp != NULL)
+    {
+
+        if (temp->rno % 2 == 0)
+        {
+
+            cout << temp->rno << "  " << temp->name << "   " << temp->email << "   " << temp->Ph_no << "   " << temp->address << endl;
+        }
+        temp = temp->next;
+    }
+}
+void Student::SectionB()
+{
+
+    temp = start;
+    if (start == NULL)
+    {
+        cout << "Record Not Found" << endl;
+        return;
+    }
+
+    system("cls");
+    // cout << "=================================================================\n";
+    // cout << "Roll.      	 NAME    		       Email                PH_No\n";
+    // cout << "==================================================================\n";
+
+    while (temp != NULL)
+    {
+
+        if (temp->rno % 2 != 0)
+        {
+
+            cout << temp->rno << "  " << temp->name << "   " << temp->email << "   " << temp->Ph_no << "   " << temp->address << endl;
+        }
+        temp = temp->next;
+    }
+}
